@@ -38,7 +38,7 @@ import {
   Bell,
   Star,
   BarChart3,
-  UploadCloud,
+  Upload,
   Users,
 } from 'lucide-react';
 
@@ -519,7 +519,7 @@ export default function LogisticsDashboard() {
                   Téléversez et gérez tous vos documents d'expédition en un seul endroit.
                 </p>
                 <Button>
-                  <UploadCloud className="h-4 w-4 mr-2" />
+                  <Upload className="h-4 w-4 mr-2" />
                   Téléverser un document
                 </Button>
               </CardContent>
