@@ -17,12 +17,6 @@ import {
   SelectValue,
 } from '@/components/ui/select';
 import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
-} from '@/components/ui/dropdown-menu';
-import {
   Package,
   Ship,
   Plane,
@@ -33,7 +27,6 @@ import {
   FileText,
   Download,
   Eye,
-  MoreHorizontal,
   Search,
   Filter,
   Calendar,
@@ -46,8 +39,10 @@ import {
   Star,
   BarChart3,
   UploadCloud,
+  Users,
 } from 'lucide-react';
 
+// Types simplifiés
 interface Shipment {
   id: string;
   trackingNumber: string;
@@ -58,12 +53,9 @@ interface Shipment {
   provider: string;
   departureDate: string;
   estimatedArrival: string;
-  actualArrival?: string;
   value: number;
   weight: number;
   progress: number;
-  documents: string[];
-  lastUpdate: string;
 }
 
 interface Quote {
@@ -75,10 +67,10 @@ interface Quote {
   status: 'draft' | 'sent' | 'accepted' | 'expired';
   price: number;
   validUntil: string;
-  createdDate: string;
   provider: string;
 }
 
+// Données mock simplifiées
 const mockShipments: Shipment[] = [
   {
     id: '1',
@@ -93,8 +85,6 @@ const mockShipments: Shipment[] = [
     value: 1250000,
     weight: 2500,
     progress: 65,
-    documents: ['Bill of Lading', 'Commercial Invoice', 'Packing List'],
-    lastUpdate: '2025-01-25 14:30',
   },
   {
     id: '2',
@@ -109,8 +99,6 @@ const mockShipments: Shipment[] = [
     value: 850000,
     weight: 150,
     progress: 85,
-    documents: ['Airway Bill', 'Commercial Invoice', 'Certificate of Origin'],
-    lastUpdate: '2025-01-24 09:15',
   },
   {
     id: '3',
@@ -122,12 +110,9 @@ const mockShipments: Shipment[] = [
     provider: 'GEFCO',
     departureDate: '2025-01-15',
     estimatedArrival: '2025-01-22',
-    actualArrival: '2025-01-21',
     value: 650000,
     weight: 800,
     progress: 100,
-    documents: ['CMR', 'Commercial Invoice', 'Delivery Receipt'],
-    lastUpdate: '2025-01-21 16:45',
   },
 ];
 
@@ -141,7 +126,6 @@ const mockQuotes: Quote[] = [
     status: 'sent',
     price: 1450000,
     validUntil: '2025-02-15',
-    createdDate: '2025-01-20',
     provider: 'CMA CGM',
   },
   {
@@ -153,7 +137,6 @@ const mockQuotes: Quote[] = [
     status: 'accepted',
     price: 2850000,
     validUntil: '2025-02-10',
-    createdDate: '2025-01-18',
     provider: 'Emirates SkyCargo',
   },
 ];
@@ -163,33 +146,25 @@ const stats = [
     title: 'Expéditions actives',
     value: '24',
     change: '+12%',
-    trend: 'up',
     icon: Package,
-    color: 'blue',
   },
   {
     title: 'Devis en cours',
     value: '8',
     change: '+5%',
-    trend: 'up',
     icon: FileText,
-    color: 'green',
   },
   {
     title: 'Économies ce mois',
     value: '2.4M XOF',
     change: '+18%',
-    trend: 'up',
     icon: DollarSign,
-    color: 'purple',
   },
   {
     title: 'Satisfaction',
     value: '4.8/5',
     change: '+0.2',
-    trend: 'up',
     icon: Star,
-    color: 'yellow',
   },
 ];
 
@@ -405,28 +380,15 @@ export default function LogisticsDashboard() {
                       </div>
 
                       {/* Actions */}
-                      <div className="lg:col-span-1 flex justify-end">
-                        <DropdownMenu>
-                          <DropdownMenuTrigger asChild>
-                            <Button variant="ghost" size="sm">
-                              <MoreHorizontal className="h-4 w-4" />
-                            </Button>
-                          </DropdownMenuTrigger>
-                          <DropdownMenuContent align="end">
-                            <DropdownMenuItem>
-                              <Eye className="h-4 w-4 mr-2" />
-                              Voir détails
-                            </DropdownMenuItem>
-                            <DropdownMenuItem>
-                              <Download className="h-4 w-4 mr-2" />
-                              Télécharger docs
-                            </DropdownMenuItem>
-                            <DropdownMenuItem>
-                              <Bell className="h-4 w-4 mr-2" />
-                              Notifications
-                            </DropdownMenuItem>
-                          </DropdownMenuContent>
-                        </DropdownMenu>
+                      <div className="lg:col-span-1 flex justify-end space-x-2">
+                        <Button variant="outline" size="sm">
+                          <Eye className="h-4 w-4 mr-1" />
+                          Voir
+                        </Button>
+                        <Button variant="outline" size="sm">
+                          <Download className="h-4 w-4 mr-1" />
+                          Docs
+                        </Button>
                       </div>
                     </div>
 
@@ -444,12 +406,12 @@ export default function LogisticsDashboard() {
                           <span className="font-medium ml-1">{shipment.weight} kg</span>
                         </div>
                         <div>
-                          <span className="text-gray-500">Documents:</span>
-                          <span className="font-medium ml-1">{shipment.documents.length}</span>
+                          <span className="text-gray-500">Départ:</span>
+                          <span className="font-medium ml-1">{shipment.departureDate}</span>
                         </div>
                         <div>
-                          <span className="text-gray-500">Dernière MAJ:</span>
-                          <span className="font-medium ml-1">{shipment.lastUpdate}</span>
+                          <span className="text-gray-500">Arrivée prévue:</span>
+                          <span className="font-medium ml-1">{shipment.estimatedArrival}</span>
                         </div>
                       </div>
                     </div>
