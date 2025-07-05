@@ -701,13 +701,13 @@ export default function LogisticsPage() {
                 htmlFor={mode.value}
                 className={`block p-4 border-2 rounded-lg cursor-pointer transition-all ${
                   formData.transport.mode === mode.value
-                    ? `border-${mode.color}-500 bg-${mode.color}-50`
+                    ? 'border-blue-500 bg-blue-50'
                     : 'border-gray-200 hover:border-gray-300'
                 }`}
               >
                 <div className="text-center">
                   <mode.icon className={`w-8 h-8 mx-auto mb-2 ${
-                    formData.transport.mode === mode.value ? `text-${mode.color}-600` : 'text-gray-400'
+                    formData.transport.mode === mode.value ? 'text-blue-600' : 'text-gray-400'
                   }`} />
                   <h4 className="font-semibold">{mode.label}</h4>
                   <p className="text-sm text-gray-600">{mode.desc}</p>
