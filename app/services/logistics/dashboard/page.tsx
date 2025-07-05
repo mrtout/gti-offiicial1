@@ -9,7 +9,6 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Progress } from '@/components/ui/progress';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { Alert, AlertDescription } from '@/components/ui/alert';
 import {
   Select,
   SelectContent,
@@ -45,7 +44,6 @@ import {
   RefreshCw,
   Bell,
   Star,
-  Users,
   BarChart3,
   UploadCloud,
 } from 'lucide-react';
@@ -286,8 +284,8 @@ export default function LogisticsDashboard() {
                       <span className="text-sm text-green-600">{stat.change}</span>
                     </div>
                   </div>
-                  <div className={`w-12 h-12 bg-${stat.color}-100 rounded-full flex items-center justify-center`}>
-                    <stat.icon className={`h-6 w-6 text-${stat.color}-600`} />
+                  <div className="w-12 h-12 bg-blue-100 rounded-full flex items-center justify-center">
+                    <stat.icon className="h-6 w-6 text-blue-600" />
                   </div>
                 </div>
               </CardContent>
