@@ -25,6 +25,7 @@ import {
   Bell,
   LogIn,
   UserPlus,
+  Truck,
 } from 'lucide-react';
 
 const languages = [
@@ -53,6 +54,8 @@ const services = [
     description: 'Import/Export professionnel',
   },
   {
+    href: '/services/dashboard',
+    icon: Package,
     title: 'Dashboard Logistique',
     description: 'Gérez vos expéditions',
   },
@@ -61,10 +64,6 @@ const services = [
     icon: Truck,
     title: 'Suivi de colis',
     description: 'Suivez vos expéditions',
-  },
-    icon: Calculator,
-    title: 'Dashboard Logistique',
-    description: 'Gérez vos expéditions',
   },
   {
     href: '/services/sourcing',
