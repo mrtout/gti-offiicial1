@@ -1,278 +1,174 @@
 "use client";
 
-import React, { useState, useEffect } from 'react';
-import Link from 'next/link';
-import Image from 'next/image';
+import React from 'react';
+import { Header } from '@/components/layout/header';
+import { Footer } from '@/components/layout/footer';
 import { Button } from '@/components/ui/button';
-import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
-} from '@/components/ui/dropdown-menu';
-import {
-  Menu,
-  ShoppingCart,
-  User,
-  Globe,
-  Package,
-  Plane,
   Calculator,
-  Search,
-  Mail,
-  Bell,
-  LogIn,
-  UserPlus,
+  Package,
   Truck,
+  Globe,
+  Clock,
+  Shield,
+  CheckCircle,
+  ArrowRight,
 } from 'lucide-react';
 
-const languages = [
-  { code: 'fr', name: 'Français', flag: '🇫🇷' },
-  { code: 'en', name: 'English', flag: '🇬🇧' },
-  { code: 'ar', name: 'العربية', flag: '🇸🇦' },
-];
-
-const services = [
+const logisticsServices = [
   {
-    href: '/services/shopping',
-    icon: ShoppingCart,
-    title: 'Commandes Produits',
-    description: 'AliExpress, Shein, Amazon...',
-  },
-  {
-    href: '/services/flights',
-    icon: Plane,
-    title: 'Réservation Vols',
-    description: 'Billets d\'avion au meilleur prix',
-  },
-  {
-    href: '/services/logistics',
     icon: Calculator,
-    title: 'Cotation Logistique',
-    description: 'Import/Export professionnel',
+    title: 'Cotation Express',
+    description: 'Obtenez un devis instantané pour vos expéditions',
+    features: ['Calcul automatique', 'Prix transparents', 'Devis PDF'],
   },
   {
-    href: '/services/dashboard',
     icon: Package,
-    title: 'Dashboard Logistique',
-    description: 'Gérez vos expéditions',
+    title: 'Gestion des Stocks',
+    description: 'Entreposage et gestion de vos marchandises',
+    features: ['Stockage sécurisé', 'Inventaire temps réel', 'Préparation commandes'],
   },
   {
-    href: '/services/logistics/tracking',
     icon: Truck,
-    title: 'Suivi de colis',
-    description: 'Suivez vos expéditions',
+    title: 'Transport Multimodal',
+    description: 'Solutions de transport adaptées à vos besoins',
+    features: ['Maritime', 'Aérien', 'Routier'],
   },
   {
-    href: '/services/sourcing',
-    icon: Search,
-    title: 'Sourcing Produits',
-    description: 'Trouvez vos fournisseurs',
-  },
-  {
-    href: '/services/postbox',
-    icon: Mail,
-    title: 'Boîte Postale',
-    description: 'Adresse virtuelle temporaire',
+    icon: Globe,
+    title: 'Import/Export',
+    description: 'Accompagnement complet pour vos opérations internationales',
+    features: ['Dédouanement', 'Documentation', 'Conformité réglementaire'],
   },
 ];
 
-export function Header() {
-  const [isScrolled, setIsScrolled] = useState(false);
-  const [currentLang, setCurrentLang] = useState('fr');
+const advantages = [
+  {
+    icon: Clock,
+    title: 'Rapidité',
+    description: 'Traitement express de vos demandes',
+  },
+  {
+    icon: Shield,
+    title: 'Sécurité',
+    description: 'Assurance complète de vos marchandises',
+  },
+  {
+    icon: CheckCircle,
+    title: 'Fiabilité',
+    description: 'Suivi en temps réel de vos expéditions',
+  },
+];
 
-  useEffect(() => {
-    const handleScroll = () => {
-      setIsScrolled(window.scrollY > 0);
-    };
-    window.addEventListener('scroll', handleScroll);
-    return () => window.removeEventListener('scroll', handleScroll);
-  }, []);
-
+export default function LogisticsPage() {
   return (
-    <header
-      className={`sticky top-0 z-50 w-full transition-all duration-300 ${
-        isScrolled
-          ? 'bg-white/95 backdrop-blur-lg shadow-lg border-b'
-          : 'bg-transparent'
-      }`}
-    >
-      <div className="container mx-auto px-4">
-        <div className="flex h-16 items-center justify-between">
-          {/* Logo */}
-          <Link href="/">
-            <div className="flex items-center space-x-3">
-              <div className="relative w-10 h-10">
-                <Image
-                  src="/Groupe Tanou International Logo Blanc.jpg"
-                  alt="Groupe Tanou International"
-                  fill
-                  className="object-contain"
-                />
-              </div>
-              <div className="hidden sm:block">
-                <h1 className="text-xl font-bold text-gray-900">
-                  Groupe Tanou
-                </h1>
-                <p className="text-xs text-gray-600 -mt-1">International</p>
-              </div>
-            </div>
-          </Link>
-
-          {/* Desktop Navigation */}
-          <nav className="hidden lg:flex items-center space-x-8">
-            <Link
-              href="/"
-              className="text-gray-700 hover:text-yellow-600 font-medium transition-colors"
-            >
-              Accueil
-            </Link>
-            
-            <DropdownMenu>
-              <DropdownMenuTrigger className="flex items-center space-x-1 text-gray-700 hover:text-yellow-600 font-medium transition-colors">
-                <span>Services</span>
-              </DropdownMenuTrigger>
-              <DropdownMenuContent className="w-80 p-4">
-                <div className="grid gap-3">
-                  {services.map((service) => (
-                    <Link key={service.href} href={service.href}>
-                      <div className="flex items-center space-x-3 p-3 rounded-lg hover:bg-gray-50 transition-colors">
-                        <service.icon className="h-5 w-5 text-yellow-600" />
-                        <div>
-                          <p className="font-medium text-gray-900">
-                            {service.title}
-                          </p>
-                          <p className="text-sm text-gray-600">
-                            {service.description}
-                          </p>
-                        </div>
-                      </div>
-                    </Link>
-                  ))}
-                </div>
-              </DropdownMenuContent>
-            </DropdownMenu>
-
-            <Link
-              href="/about"
-              className="text-gray-700 hover:text-yellow-600 font-medium transition-colors"
-            >
-              À Propos
-            </Link>
-            <Link
-              href="/contact"
-              className="text-gray-700 hover:text-yellow-600 font-medium transition-colors"
-            >
-              Contact
-            </Link>
-          </nav>
-
-          {/* Actions */}
-          <div className="flex items-center space-x-4">
-            {/* Language Selector */}
-            <DropdownMenu>
-              <DropdownMenuTrigger asChild>
-                <Button variant="ghost" size="sm">
-                  <Globe className="h-4 w-4 mr-2" />
-                  <span className="hidden sm:inline">
-                    {languages.find((l) => l.code === currentLang)?.flag}
-                  </span>
-                </Button>
-              </DropdownMenuTrigger>
-              <DropdownMenuContent>
-                {languages.map((lang) => (
-                  <DropdownMenuItem
-                    key={lang.code}
-                    onClick={() => setCurrentLang(lang.code)}
-                  >
-                    <span className="mr-2">{lang.flag}</span>
-                    {lang.name}
-                  </DropdownMenuItem>
-                ))}
-              </DropdownMenuContent>
-            </DropdownMenu>
-
-            {/* Notifications */}
-            <Button variant="ghost" size="sm" className="relative">
-              <Bell className="h-4 w-4" />
-              <Badge className="absolute -top-1 -right-1 h-5 w-5 p-0 text-xs">
-                3
-              </Badge>
+    <div className="min-h-screen bg-gradient-to-br from-gray-50 to-white">
+      <Header />
+      
+      <main className="container mx-auto px-4 py-12">
+        {/* Hero Section */}
+        <div className="text-center mb-16">
+          <div className="inline-flex items-center justify-center w-16 h-16 bg-yellow-100 rounded-full mb-6">
+            <Calculator className="h-8 w-8 text-yellow-600" />
+          </div>
+          <h1 className="text-4xl md:text-5xl font-bold text-gray-900 mb-6">
+            Solutions Logistiques
+            <span className="block text-yellow-600">Professionnelles</span>
+          </h1>
+          <p className="text-xl text-gray-600 max-w-3xl mx-auto mb-8">
+            Optimisez vos opérations d'import/export avec nos solutions logistiques complètes. 
+            De la cotation au transport, nous gérons chaque étape de votre chaîne d'approvisionnement.
+          </p>
+          <div className="flex flex-col sm:flex-row gap-4 justify-center">
+            <Button size="lg" className="gradient-gold text-white">
+              Demander un Devis
+              <ArrowRight className="ml-2 h-5 w-5" />
             </Button>
-
-            {/* Cart */}
-            <Button variant="ghost" size="sm" className="relative">
-              <ShoppingCart className="h-4 w-4" />
-              <Badge className="absolute -top-1 -right-1 h-5 w-5 p-0 text-xs">
-                2
-              </Badge>
+            <Button size="lg" variant="outline">
+              Voir nos Tarifs
             </Button>
-
-            {/* Auth Buttons */}
-            <div className="hidden sm:flex items-center space-x-2">
-              <Button variant="ghost" size="sm">
-                <LogIn className="h-4 w-4 mr-2" />
-                Connexion
-              </Button>
-              <Button size="sm" className="gradient-gold text-white">
-                <UserPlus className="h-4 w-4 mr-2" />
-                S'inscrire
-              </Button>
-            </div>
-
-            {/* Mobile Menu */}
-            <Sheet>
-              <SheetTrigger asChild className="lg:hidden">
-                <Button variant="ghost" size="sm">
-                  <Menu className="h-5 w-5" />
-                </Button>
-              </SheetTrigger>
-              <SheetContent side="right" className="w-80">
-                <div className="flex flex-col space-y-6 mt-6">
-                  <Link
-                    href="/"
-                    className="text-lg font-medium text-gray-900 hover:text-yellow-600 transition-colors"
-                  >
-                    Accueil
-                  </Link>
-                  
-                  <div className="space-y-4">
-                    <h3 className="text-lg font-medium text-gray-900">Services</h3>
-                    {services.map((service) => (
-                      <Link key={service.href} href={service.href}>
-                        <div className="flex items-center space-x-3 p-3 rounded-lg hover:bg-gray-50 transition-colors">
-                          <service.icon className="h-5 w-5 text-yellow-600" />
-                          <div>
-                            <p className="font-medium text-gray-900">
-                              {service.title}
-                            </p>
-                            <p className="text-sm text-gray-600">
-                              {service.description}
-                            </p>
-                          </div>
-                        </div>
-                      </Link>
-                    ))}
-                  </div>
-
-                  <div className="pt-6 space-y-3">
-                    <Button className="w-full gradient-gold text-white">
-                      <LogIn className="h-4 w-4 mr-2" />
-                      Connexion
-                    </Button>
-                    <Button variant="outline" className="w-full">
-                      <UserPlus className="h-4 w-4 mr-2" />
-                      S'inscrire
-                    </Button>
-                  </div>
-                </div>
-              </SheetContent>
-            </Sheet>
           </div>
         </div>
-      </div>
-    </header>
+
+        {/* Services Grid */}
+        <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8 mb-16">
+          {logisticsServices.map((service, index) => (
+            <Card key={index} className="group hover:shadow-xl transition-all duration-300 border-0 shadow-lg">
+              <CardHeader className="text-center pb-4">
+                <div className="inline-flex items-center justify-center w-12 h-12 bg-yellow-100 rounded-lg mb-4 group-hover:bg-yellow-200 transition-colors">
+                  <service.icon className="h-6 w-6 text-yellow-600" />
+                </div>
+                <CardTitle className="text-xl mb-2">{service.title}</CardTitle>
+                <CardDescription className="text-gray-600">
+                  {service.description}
+                </CardDescription>
+              </CardHeader>
+              <CardContent>
+                <ul className="space-y-2">
+                  {service.features.map((feature, featureIndex) => (
+                    <li key={featureIndex} className="flex items-center text-sm text-gray-600">
+                      <CheckCircle className="h-4 w-4 text-green-500 mr-2 flex-shrink-0" />
+                      {feature}
+                    </li>
+                  ))}
+                </ul>
+              </CardContent>
+            </Card>
+          ))}
+        </div>
+
+        {/* Advantages Section */}
+        <div className="bg-white rounded-2xl shadow-xl p-8 mb-16">
+          <div className="text-center mb-12">
+            <h2 className="text-3xl font-bold text-gray-900 mb-4">
+              Pourquoi Choisir Nos Services ?
+            </h2>
+            <p className="text-gray-600 max-w-2xl mx-auto">
+              Notre expertise et notre réseau international nous permettent de vous offrir 
+              des solutions logistiques optimales.
+            </p>
+          </div>
+          
+          <div className="grid md:grid-cols-3 gap-8">
+            {advantages.map((advantage, index) => (
+              <div key={index} className="text-center">
+                <div className="inline-flex items-center justify-center w-16 h-16 bg-yellow-100 rounded-full mb-4">
+                  <advantage.icon className="h-8 w-8 text-yellow-600" />
+                </div>
+                <h3 className="text-xl font-semibold text-gray-900 mb-2">
+                  {advantage.title}
+                </h3>
+                <p className="text-gray-600">
+                  {advantage.description}
+                </p>
+              </div>
+            ))}
+          </div>
+        </div>
+
+        {/* CTA Section */}
+        <div className="bg-gradient-to-r from-yellow-500 to-yellow-600 rounded-2xl p-8 text-center text-white">
+          <h2 className="text-3xl font-bold mb-4">
+            Prêt à Optimiser Votre Logistique ?
+          </h2>
+          <p className="text-yellow-100 mb-6 max-w-2xl mx-auto">
+            Contactez nos experts pour une consultation personnalisée et découvrez 
+            comment nous pouvons améliorer votre chaîne d'approvisionnement.
+          </p>
+          <div className="flex flex-col sm:flex-row gap-4 justify-center">
+            <Button size="lg" variant="secondary" className="bg-white text-yellow-600 hover:bg-gray-100">
+              Consultation Gratuite
+            </Button>
+            <Button size="lg" variant="outline" className="border-white text-white hover:bg-white hover:text-yellow-600">
+              Nos Références
+            </Button>
+          </div>
+        </div>
+      </main>
+
+      <Footer />
+    </div>
   );
 }
