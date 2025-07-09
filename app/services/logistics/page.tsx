@@ -1027,6 +1027,12 @@ export default function LogisticsPage() {
             <Button variant="outline" onClick={() => setShowResults(false)}>
               Nouvelle cotation
             </Button>
+            <Button
+              onClick={() => window.location.href = '/services/logistics/dashboard'}
+              className="bg-blue-600 hover:bg-blue-700 text-white"
+            >
+              Accéder au Dashboard
+            </Button>
           </div>
         </div>
       </div>
@@ -1043,6 +1049,21 @@ export default function LogisticsPage() {
           <p className="text-gray-600 max-w-2xl mx-auto">
             Plus de 5000 entreprises nous font confiance pour leurs expéditions internationales
           </p>
+          <div className="mt-4">
+            <Button
+              variant="outline"
+              onClick={() => window.location.href = '/services/logistics/dashboard'}
+              className="mr-4"
+            >
+              Dashboard Logistique
+            </Button>
+            <Button
+              variant="outline"
+              onClick={() => window.location.href = '/services/logistics/tracking'}
+            >
+              Suivi de Colis
+            </Button>
+          </div>
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-4xl mx-auto">

@@ -53,6 +53,12 @@ const services = [
     description: 'Import/Export professionnel',
   },
   {
+    href: '/services/logistics/dashboard',
+    icon: Calculator,
+    title: 'Dashboard Logistique',
+    description: 'Gérez vos expéditions',
+  },
+  {
     href: '/services/sourcing',
     icon: Search,
     title: 'Sourcing Produits',
