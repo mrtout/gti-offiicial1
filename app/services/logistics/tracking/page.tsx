@@ -249,7 +249,7 @@ export default function TrackingPage() {
             <div className="text-center text-sm text-gray-500">
               <p>Formats acceptés : GTI-XXX-XXXXXX, REF-XXXXXX</p>
               <p className="mt-1">
-                Besoin d'aide ? <a href="/contact" className="text-blue-600 hover:underline">Contactez-nous</a>
+                Besoin d&apos;aide ? <a href="/contact" className="text-blue-600 hover:underline">Contactez-nous</a>
               </p>
             </div>
           </CardContent>
