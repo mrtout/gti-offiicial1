@@ -3,6 +3,9 @@
 import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
+import { useAuth } from '@/contexts/AuthContext';
+import { logOut } from '@/lib/auth';
+import { AuthModal } from '@/components/auth/AuthModal';
 import { Button } from '@/components/ui/button';
 import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet';
 import { Badge } from '@/components/ui/badge';
@@ -25,6 +28,8 @@ import {
   Bell,
   LogIn,
   UserPlus,
+  LogOut,
+  Settings,
 } from 'lucide-react';
 
 const languages = [
@@ -75,6 +80,8 @@ const services = [
 export function Header() {
   const [isScrolled, setIsScrolled] = useState(false);
   const [currentLang, setCurrentLang] = useState('fr');
+  const [showAuthModal, setShowAuthModal] = useState(false);
+  const { user, profile, loading } = useAuth();
 
   useEffect(() => {
     const handleScroll = () => {
@@ -84,6 +91,13 @@ export function Header() {
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
+  const handleSignOut = async () => {
+    try {
+      await logOut();
+    } catch (error) {
+      console.error('Error signing out:', error);
+    }
+  };
   return (
     <header
       className={`sticky top-0 z-50 w-full transition-all duration-300 ${
@@ -204,16 +218,43 @@ export function Header() {
             </Button>
 
             {/* Auth Buttons */}
-            <div className="hidden sm:flex items-center space-x-2">
-              <Button variant="ghost" size="sm">
-                <LogIn className="h-4 w-4 mr-2" />
-                Connexion
-              </Button>
-              <Button size="sm" className="gradient-gold text-white">
-                <UserPlus className="h-4 w-4 mr-2" />
-                S'inscrire
-              </Button>
-            </div>
+            {!loading && (
+              <div className="hidden sm:flex items-center space-x-2">
+                {user ? (
+                  <DropdownMenu>
+                    <DropdownMenuTrigger asChild>
+                      <Button variant="ghost" size="sm">
+                        <User className="h-4 w-4 mr-2" />
+                        {profile?.displayName || user.email}
+                      </Button>
+                    </DropdownMenuTrigger>
+                    <DropdownMenuContent align="end">
+                      <DropdownMenuItem asChild>
+                        <Link href="/dashboard">
+                          <Settings className="h-4 w-4 mr-2" />
+                          Dashboard
+                        </Link>
+                      </DropdownMenuItem>
+                      <DropdownMenuItem onClick={handleSignOut}>
+                        <LogOut className="h-4 w-4 mr-2" />
+                        Déconnexion
+                      </DropdownMenuItem>
+                    </DropdownMenuContent>
+                  </DropdownMenu>
+                ) : (
+                  <>
+                    <Button variant="ghost" size="sm" onClick={() => setShowAuthModal(true)}>
+                      <LogIn className="h-4 w-4 mr-2" />
+                      Connexion
+                    </Button>
+                    <Button size="sm" className="gradient-gold text-white" onClick={() => setShowAuthModal(true)}>
+                      <UserPlus className="h-4 w-4 mr-2" />
+                      S'inscrire
+                    </Button>
+                  </>
+                )}
+              </div>
+            )}
 
             {/* Mobile Menu */}
             <Sheet>
@@ -251,14 +292,28 @@ export function Header() {
                   </div>
 
                   <div className="pt-6 space-y-3">
-                    <Button className="w-full gradient-gold text-white">
-                      <LogIn className="h-4 w-4 mr-2" />
-                      Connexion
-                    </Button>
-                    <Button variant="outline" className="w-full">
-                      <UserPlus className="h-4 w-4 mr-2" />
-                      S'inscrire
-                    </Button>
+                    {user ? (
+                      <>
+                        <div className="text-center py-2">
+                          <p className="font-medium">{profile?.displayName || user.email}</p>
+                        </div>
+                        <Button variant="outline" className="w-full" onClick={handleSignOut}>
+                          <LogOut className="h-4 w-4 mr-2" />
+                          Déconnexion
+                        </Button>
+                      </>
+                    ) : (
+                      <>
+                        <Button className="w-full gradient-gold text-white" onClick={() => setShowAuthModal(true)}>
+                          <LogIn className="h-4 w-4 mr-2" />
+                          Connexion
+                        </Button>
+                        <Button variant="outline" className="w-full" onClick={() => setShowAuthModal(true)}>
+                          <UserPlus className="h-4 w-4 mr-2" />
+                          S'inscrire
+                        </Button>
+                      </>
+                    )}
                   </div>
                 </div>
               </SheetContent>
@@ -266,6 +321,8 @@ export function Header() {
           </div>
         </div>
       </div>
+      
+      <AuthModal isOpen={showAuthModal} onClose={() => setShowAuthModal(false)} />
     </header>
   );
 }
