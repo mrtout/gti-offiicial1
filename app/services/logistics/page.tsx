@@ -1,313 +1,274 @@
 "use client";
 
-import React, { useState } from 'react';
-import { Header } from '@/components/layout/header';
-import { Footer } from '@/components/layout/footer';
+import React, { useState, useEffect } from 'react';
+import Link from 'next/link';
+import Image from 'next/image';
 import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { Textarea } from '@/components/ui/textarea';
+import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet';
+import { Badge } from '@/components/ui/badge';
 import {
-  Calculator,
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from '@/components/ui/dropdown-menu';
+import {
+  Menu,
+  ShoppingCart,
+  User,
+  Globe,
   Package,
-  Truck,
-  Ship,
   Plane,
-  MapPin,
-  Clock,
-  DollarSign,
-  FileText,
-  CheckCircle,
+  Calculator,
+  Search,
+  Mail,
+  Bell,
+  LogIn,
+  UserPlus,
 } from 'lucide-react';
 
-const transportModes = [
-  { value: 'air', label: 'Transport Aérien', icon: Plane, description: 'Rapide et sécurisé' },
-  { value: 'sea', label: 'Transport Maritime', icon: Ship, description: 'Économique pour gros volumes' },
-  { value: 'road', label: 'Transport Routier', icon: Truck, description: 'Flexible et direct' },
+const languages = [
+  { code: 'fr', name: 'Français', flag: '🇫🇷' },
+  { code: 'en', name: 'English', flag: '🇬🇧' },
+  { code: 'ar', name: 'العربية', flag: '🇸🇦' },
 ];
 
 const services = [
   {
+    href: '/services/shopping',
+    icon: ShoppingCart,
+    title: 'Commandes Produits',
+    description: 'AliExpress, Shein, Amazon...',
+  },
+  {
+    href: '/services/flights',
+    icon: Plane,
+    title: 'Réservation Vols',
+    description: 'Billets d\'avion au meilleur prix',
+  },
+  {
+    href: '/services/logistics',
     icon: Calculator,
-    title: 'Cotation Instantanée',
-    description: 'Obtenez un devis précis en quelques clics',
+    title: 'Cotation Logistique',
+    description: 'Import/Export professionnel',
   },
   {
-    icon: Package,
-    title: 'Suivi en Temps Réel',
-    description: 'Suivez vos expéditions à chaque étape',
+    href: '/services/logistics/dashboard',
+    icon: Calculator,
+  {
+    href: '/services/logistics/dashboard',
+    icon: Calculator,
+    title: 'Dashboard Logistique',
+    description: 'Gérez vos expéditions',
   },
   {
-    icon: FileText,
-    title: 'Documentation Complète',
-    description: 'Gestion de tous vos documents douaniers',
+    href: '/services/sourcing',
+    icon: Search,
+    title: 'Sourcing Produits',
+    description: 'Trouvez vos fournisseurs',
   },
   {
-    icon: CheckCircle,
-    title: 'Assurance Cargo',
-    description: 'Protection complète de vos marchandises',
+    href: '/services/postbox',
+    icon: Mail,
+    title: 'Boîte Postale',
+    description: 'Adresse virtuelle temporaire',
   },
 ];
 
-export default function LogisticsPage() {
-  const [formData, setFormData] = useState({
-    origin: '',
-    destination: '',
-    weight: '',
-    dimensions: '',
-    transportMode: '',
-    cargoType: '',
-    description: '',
-  });
+export function Header() {
+  const [isScrolled, setIsScrolled] = useState(false);
+  const [currentLang, setCurrentLang] = useState('fr');
 
-  const handleInputChange = (field: string, value: string) => {
-    setFormData(prev => ({ ...prev, [field]: value }));
-  };
-
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    // Handle form submission
-    console.log('Form submitted:', formData);
-  };
+  useEffect(() => {
+    const handleScroll = () => {
+      setIsScrolled(window.scrollY > 0);
+    };
+    window.addEventListener('scroll', handleScroll);
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-yellow-50">
-      <Header />
-      
-      {/* Hero Section */}
-      <section className="relative py-20 px-4">
-        <div className="container mx-auto max-w-6xl">
-          <div className="text-center mb-16">
-            <div className="inline-flex items-center justify-center w-16 h-16 bg-gradient-to-r from-blue-600 to-yellow-600 rounded-full mb-6">
-              <Calculator className="w-8 h-8 text-white" />
+    <header
+      className={`sticky top-0 z-50 w-full transition-all duration-300 ${
+        isScrolled
+          ? 'bg-white/95 backdrop-blur-lg shadow-lg border-b'
+          : 'bg-transparent'
+      }`}
+    >
+      <div className="container mx-auto px-4">
+        <div className="flex h-16 items-center justify-between">
+          {/* Logo */}
+          <Link href="/">
+            <div className="flex items-center space-x-3">
+              <div className="relative w-10 h-10">
+                <Image
+                  src="/Groupe Tanou International Logo Blanc.jpg"
+                  alt="Groupe Tanou International"
+                  fill
+                  className="object-contain"
+                />
+              </div>
+              <div className="hidden sm:block">
+                <h1 className="text-xl font-bold text-gray-900">
+                  Groupe Tanou
+                </h1>
+                <p className="text-xs text-gray-600 -mt-1">International</p>
+              </div>
             </div>
-            <h1 className="text-4xl md:text-6xl font-bold text-gray-900 mb-6">
-              Cotation <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-yellow-600">Logistique</span>
-            </h1>
-            <p className="text-xl text-gray-600 max-w-3xl mx-auto">
-              Solutions d'import/export professionnelles avec cotation instantanée et suivi en temps réel
-            </p>
-          </div>
+          </Link>
 
-          {/* Services Grid */}
-          <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6 mb-16">
-            {services.map((service, index) => (
-              <Card key={index} className="text-center hover:shadow-lg transition-shadow">
-                <CardHeader>
-                  <div className="inline-flex items-center justify-center w-12 h-12 bg-gradient-to-r from-blue-100 to-yellow-100 rounded-full mx-auto mb-4">
-                    <service.icon className="w-6 h-6 text-blue-600" />
-                  </div>
-                  <CardTitle className="text-lg">{service.title}</CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <CardDescription>{service.description}</CardDescription>
-                </CardContent>
-              </Card>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* Quote Form Section */}
-      <section className="py-16 px-4 bg-white">
-        <div className="container mx-auto max-w-4xl">
-          <div className="text-center mb-12">
-            <h2 className="text-3xl font-bold text-gray-900 mb-4">
-              Demande de Cotation
-            </h2>
-            <p className="text-gray-600">
-              Remplissez le formulaire ci-dessous pour recevoir votre devis personnalisé
-            </p>
-          </div>
-
-          <Card className="shadow-xl">
-            <CardHeader>
-              <CardTitle className="flex items-center gap-2">
-                <FileText className="w-5 h-5" />
-                Informations d'Expédition
-              </CardTitle>
-            </CardHeader>
-            <CardContent>
-              <form onSubmit={handleSubmit} className="space-y-6">
-                <div className="grid md:grid-cols-2 gap-6">
-                  <div className="space-y-2">
-                    <Label htmlFor="origin">Origine</Label>
-                    <div className="relative">
-                      <MapPin className="absolute left-3 top-3 w-4 h-4 text-gray-400" />
-                      <Input
-                        id="origin"
-                        placeholder="Ville ou pays d'origine"
-                        className="pl-10"
-                        value={formData.origin}
-                        onChange={(e) => handleInputChange('origin', e.target.value)}
-                      />
-                    </div>
-                  </div>
-                  <div className="space-y-2">
-                    <Label htmlFor="destination">Destination</Label>
-                    <div className="relative">
-                      <MapPin className="absolute left-3 top-3 w-4 h-4 text-gray-400" />
-                      <Input
-                        id="destination"
-                        placeholder="Ville ou pays de destination"
-                        className="pl-10"
-                        value={formData.destination}
-                        onChange={(e) => handleInputChange('destination', e.target.value)}
-                      />
-                    </div>
-                  </div>
+          {/* Desktop Navigation */}
+          <nav className="hidden lg:flex items-center space-x-8">
+            <Link
+              href="/"
+              className="text-gray-700 hover:text-yellow-600 font-medium transition-colors"
+            >
+              Accueil
+            </Link>
+            
+            <DropdownMenu>
+              <DropdownMenuTrigger className="flex items-center space-x-1 text-gray-700 hover:text-yellow-600 font-medium transition-colors">
+                <span>Services</span>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent className="w-80 p-4">
+                <div className="grid gap-3">
+                  {services.map((service) => (
+                    <Link key={service.href} href={service.href}>
+                      <div className="flex items-center space-x-3 p-3 rounded-lg hover:bg-gray-50 transition-colors">
+                        <service.icon className="h-5 w-5 text-yellow-600" />
+                        <div>
+                          <p className="font-medium text-gray-900">
+                            {service.title}
+                          </p>
+                          <p className="text-sm text-gray-600">
+                            {service.description}
+                          </p>
+                        </div>
+                      </div>
+                    </Link>
+                  ))}
                 </div>
+              </DropdownMenuContent>
+            </DropdownMenu>
 
-                <div className="grid md:grid-cols-2 gap-6">
-                  <div className="space-y-2">
-                    <Label htmlFor="weight">Poids (kg)</Label>
-                    <Input
-                      id="weight"
-                      type="number"
-                      placeholder="Poids total en kg"
-                      value={formData.weight}
-                      onChange={(e) => handleInputChange('weight', e.target.value)}
-                    />
-                  </div>
-                  <div className="space-y-2">
-                    <Label htmlFor="dimensions">Dimensions (L x l x H cm)</Label>
-                    <Input
-                      id="dimensions"
-                      placeholder="ex: 100 x 50 x 30"
-                      value={formData.dimensions}
-                      onChange={(e) => handleInputChange('dimensions', e.target.value)}
-                    />
-                  </div>
-                </div>
+            <Link
+              href="/about"
+              className="text-gray-700 hover:text-yellow-600 font-medium transition-colors"
+            >
+              À Propos
+            </Link>
+            <Link
+              href="/contact"
+              className="text-gray-700 hover:text-yellow-600 font-medium transition-colors"
+            >
+              Contact
+            </Link>
+          </nav>
 
-                <div className="space-y-2">
-                  <Label>Mode de Transport</Label>
-                  <Select value={formData.transportMode} onValueChange={(value) => handleInputChange('transportMode', value)}>
-                    <SelectTrigger>
-                      <SelectValue placeholder="Sélectionnez un mode de transport" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      {transportModes.map((mode) => (
-                        <SelectItem key={mode.value} value={mode.value}>
-                          <div className="flex items-center gap-2">
-                            <mode.icon className="w-4 h-4" />
-                            <span>{mode.label}</span>
-                            <span className="text-sm text-gray-500">- {mode.description}</span>
-                          </div>
-                        </SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
-                </div>
-
-                <div className="space-y-2">
-                  <Label htmlFor="cargoType">Type de Marchandise</Label>
-                  <Select value={formData.cargoType} onValueChange={(value) => handleInputChange('cargoType', value)}>
-                    <SelectTrigger>
-                      <SelectValue placeholder="Sélectionnez le type de marchandise" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="general">Marchandise Générale</SelectItem>
-                      <SelectItem value="fragile">Fragile</SelectItem>
-                      <SelectItem value="dangerous">Matières Dangereuses</SelectItem>
-                      <SelectItem value="perishable">Périssable</SelectItem>
-                      <SelectItem value="valuable">Objets de Valeur</SelectItem>
-                    </SelectContent>
-                  </Select>
-                </div>
-
-                <div className="space-y-2">
-                  <Label htmlFor="description">Description Détaillée</Label>
-                  <Textarea
-                    id="description"
-                    placeholder="Décrivez votre marchandise et vos besoins spécifiques..."
-                    rows={4}
-                    value={formData.description}
-                    onChange={(e) => handleInputChange('description', e.target.value)}
-                  />
-                </div>
-
-                <Button type="submit" className="w-full gradient-gold text-white py-3">
-                  <Calculator className="w-4 h-4 mr-2" />
-                  Obtenir ma Cotation
+          {/* Actions */}
+          <div className="flex items-center space-x-4">
+            {/* Language Selector */}
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <Button variant="ghost" size="sm">
+                  <Globe className="h-4 w-4 mr-2" />
+                  <span className="hidden sm:inline">
+                    {languages.find((l) => l.code === currentLang)?.flag}
+                  </span>
                 </Button>
-              </form>
-            </CardContent>
-          </Card>
-        </div>
-      </section>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent>
+                {languages.map((lang) => (
+                  <DropdownMenuItem
+                    key={lang.code}
+                    onClick={() => setCurrentLang(lang.code)}
+                  >
+                    <span className="mr-2">{lang.flag}</span>
+                    {lang.name}
+                  </DropdownMenuItem>
+                ))}
+              </DropdownMenuContent>
+            </DropdownMenu>
 
-      {/* Transport Modes Section */}
-      <section className="py-16 px-4 bg-gray-50">
-        <div className="container mx-auto max-w-6xl">
-          <div className="text-center mb-12">
-            <h2 className="text-3xl font-bold text-gray-900 mb-4">
-              Nos Solutions de Transport
-            </h2>
-            <p className="text-gray-600">
-              Choisissez le mode de transport adapté à vos besoins
-            </p>
-          </div>
+            {/* Notifications */}
+            <Button variant="ghost" size="sm" className="relative">
+              <Bell className="h-4 w-4" />
+              <Badge className="absolute -top-1 -right-1 h-5 w-5 p-0 text-xs">
+                3
+              </Badge>
+            </Button>
 
-          <div className="grid md:grid-cols-3 gap-8">
-            {transportModes.map((mode, index) => (
-              <Card key={index} className="hover:shadow-lg transition-shadow">
-                <CardHeader className="text-center">
-                  <div className="inline-flex items-center justify-center w-16 h-16 bg-gradient-to-r from-blue-100 to-yellow-100 rounded-full mx-auto mb-4">
-                    <mode.icon className="w-8 h-8 text-blue-600" />
+            {/* Cart */}
+            <Button variant="ghost" size="sm" className="relative">
+              <ShoppingCart className="h-4 w-4" />
+              <Badge className="absolute -top-1 -right-1 h-5 w-5 p-0 text-xs">
+                2
+              </Badge>
+            </Button>
+
+            {/* Auth Buttons */}
+            <div className="hidden sm:flex items-center space-x-2">
+              <Button variant="ghost" size="sm">
+                <LogIn className="h-4 w-4 mr-2" />
+                Connexion
+              </Button>
+              <Button size="sm" className="gradient-gold text-white">
+                <UserPlus className="h-4 w-4 mr-2" />
+                S'inscrire
+              </Button>
+            </div>
+
+            {/* Mobile Menu */}
+            <Sheet>
+              <SheetTrigger asChild className="lg:hidden">
+                <Button variant="ghost" size="sm">
+                  <Menu className="h-5 w-5" />
+                </Button>
+              </SheetTrigger>
+              <SheetContent side="right" className="w-80">
+                <div className="flex flex-col space-y-6 mt-6">
+                  <Link
+                    href="/"
+                    className="text-lg font-medium text-gray-900 hover:text-yellow-600 transition-colors"
+                  >
+                    Accueil
+                  </Link>
+                  
+                  <div className="space-y-4">
+                    <h3 className="text-lg font-medium text-gray-900">Services</h3>
+                    {services.map((service) => (
+                      <Link key={service.href} href={service.href}>
+                        <div className="flex items-center space-x-3 p-3 rounded-lg hover:bg-gray-50 transition-colors">
+                          <service.icon className="h-5 w-5 text-yellow-600" />
+                          <div>
+                            <p className="font-medium text-gray-900">
+                              {service.title}
+                            </p>
+                            <p className="text-sm text-gray-600">
+                              {service.description}
+                            </p>
+                          </div>
+                        </div>
+                      </Link>
+                    ))}
                   </div>
-                  <CardTitle>{mode.label}</CardTitle>
-                  <CardDescription>{mode.description}</CardDescription>
-                </CardHeader>
-                <CardContent>
-                  <div className="space-y-3 text-sm text-gray-600">
-                    {mode.value === 'air' && (
-                      <>
-                        <div className="flex items-center gap-2">
-                          <Clock className="w-4 h-4" />
-                          <span>Délai: 1-3 jours</span>
-                        </div>
-                        <div className="flex items-center gap-2">
-                          <DollarSign className="w-4 h-4" />
-                          <span>Coût: Élevé</span>
-                        </div>
-                      </>
-                    )}
-                    {mode.value === 'sea' && (
-                      <>
-                        <div className="flex items-center gap-2">
-                          <Clock className="w-4 h-4" />
-                          <span>Délai: 15-45 jours</span>
-                        </div>
-                        <div className="flex items-center gap-2">
-                          <DollarSign className="w-4 h-4" />
-                          <span>Coût: Économique</span>
-                        </div>
-                      </>
-                    )}
-                    {mode.value === 'road' && (
-                      <>
-                        <div className="flex items-center gap-2">
-                          <Clock className="w-4 h-4" />
-                          <span>Délai: 3-10 jours</span>
-                        </div>
-                        <div className="flex items-center gap-2">
-                          <DollarSign className="w-4 h-4" />
-                          <span>Coût: Modéré</span>
-                        </div>
-                      </>
-                    )}
+
+                  <div className="pt-6 space-y-3">
+                    <Button className="w-full gradient-gold text-white">
+                      <LogIn className="h-4 w-4 mr-2" />
+                      Connexion
+                    </Button>
+                    <Button variant="outline" className="w-full">
+                      <UserPlus className="h-4 w-4 mr-2" />
+                      S'inscrire
+                    </Button>
                   </div>
-                </CardContent>
-              </Card>
-            ))}
+                </div>
+              </SheetContent>
+            </Sheet>
           </div>
         </div>
-      </section>
-
-      <Footer />
-    </div>
+      </div>
+    </header>
   );
 }
