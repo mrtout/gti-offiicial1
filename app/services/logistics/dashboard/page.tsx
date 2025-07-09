@@ -55,11 +55,6 @@ const services = [
   {
     href: '/services/logistics/dashboard',
     icon: Calculator,
-  {
-    href: '/services/logistics/dashboard',
-  {
-    href: '/services/logistics/dashboard',
-    icon: Calculator,
     title: 'Dashboard Logistique',
     description: 'Gérez vos expéditions',
   },
