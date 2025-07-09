@@ -55,9 +55,6 @@ const services = [
   {
     href: '/services/logistics/dashboard',
     icon: Calculator,
-  {
-    href: '/services/logistics/dashboard',
-    icon: Calculator,
     title: 'Dashboard Logistique',
     description: 'Gérez vos expéditions',
   },
@@ -134,6 +131,7 @@ export function Header() {
                 <div className="grid gap-3">
                   {services.map((service) => (
                     <Link key={service.href} href={service.href}>
+                      <div className="flex items-center space-x-3 p-3 rounded-lg hover:bg-gray-50 transition-colors">
                         <service.icon className="h-5 w-5 text-yellow-600" />
                         <div>
                           <p className="font-medium text-gray-900">
