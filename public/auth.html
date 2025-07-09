@@ -1,0 +1,337 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <title>Connexion - Groupe Tanou International</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  
+  <!-- Styles FirebaseUI -->
+  <link rel="stylesheet" href="https://www.gstatic.com/firebasejs/ui/6.0.1/firebase-ui-auth.css" />
+  
+  <!-- Styles personnalisés -->
+  <style>
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      background: linear-gradient(135deg, #f59e0b, #d97706);
+      min-height: 100vh;
+      margin: 0;
+      padding: 20px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    
+    .auth-container {
+      background: white;
+      border-radius: 16px;
+      box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+      padding: 40px;
+      max-width: 400px;
+      width: 100%;
+    }
+    
+    .logo {
+      text-align: center;
+      margin-bottom: 30px;
+    }
+    
+    .logo h1 {
+      color: #1f2937;
+      font-size: 28px;
+      font-weight: 700;
+      margin: 0;
+    }
+    
+    .logo p {
+      color: #6b7280;
+      font-size: 14px;
+      margin: 5px 0 0 0;
+    }
+    
+    h2 {
+      color: #1f2937;
+      text-align: center;
+      margin-bottom: 30px;
+      font-size: 24px;
+      font-weight: 600;
+    }
+    
+    #loader {
+      text-align: center;
+      color: #6b7280;
+      font-size: 16px;
+      padding: 20px;
+    }
+    
+    .loader-spinner {
+      display: inline-block;
+      width: 20px;
+      height: 20px;
+      border: 3px solid #f3f4f6;
+      border-radius: 50%;
+      border-top-color: #f59e0b;
+      animation: spin 1s ease-in-out infinite;
+      margin-right: 10px;
+    }
+    
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+    
+    /* Personnalisation FirebaseUI */
+    .firebaseui-container {
+      background: transparent;
+      box-shadow: none;
+      max-width: none;
+    }
+    
+    .firebaseui-card-content {
+      padding: 0;
+    }
+    
+    .firebaseui-button {
+      border-radius: 8px;
+      height: 48px;
+      font-weight: 500;
+    }
+    
+    .firebaseui-idp-button {
+      max-width: 100%;
+      margin-bottom: 12px;
+    }
+    
+    .firebaseui-idp-text {
+      font-size: 16px;
+    }
+    
+    .firebaseui-textfield {
+      border-radius: 8px;
+      border: 1px solid #d1d5db;
+      height: 48px;
+    }
+    
+    .firebaseui-textfield:focus {
+      border-color: #f59e0b;
+      box-shadow: 0 0 0 3px rgba(245, 158, 11, 0.1);
+    }
+    
+    .firebaseui-title {
+      color: #1f2937;
+      font-size: 20px;
+      font-weight: 600;
+      margin-bottom: 20px;
+    }
+    
+    .firebaseui-subtitle {
+      color: #6b7280;
+      font-size: 14px;
+    }
+    
+    .firebaseui-link {
+      color: #f59e0b;
+    }
+    
+    .firebaseui-link:hover {
+      color: #d97706;
+    }
+    
+    .success-message {
+      background: #ecfdf5;
+      border: 1px solid #10b981;
+      color: #065f46;
+      padding: 16px;
+      border-radius: 8px;
+      margin-top: 20px;
+      text-align: center;
+      display: none;
+    }
+    
+    .back-link {
+      text-align: center;
+      margin-top: 30px;
+    }
+    
+    .back-link a {
+      color: #f59e0b;
+      text-decoration: none;
+      font-weight: 500;
+    }
+    
+    .back-link a:hover {
+      color: #d97706;
+      text-decoration: underline;
+    }
+  </style>
+</head>
+<body>
+  <div class="auth-container">
+    <div class="logo">
+      <h1>Groupe Tanou</h1>
+      <p>International</p>
+    </div>
+    
+    <h2>Connexion / Inscription</h2>
+    
+    <div id="loader">
+      <div class="loader-spinner"></div>
+      Chargement de l'interface...
+    </div>
+    
+    <div id="firebaseui-auth-container"></div>
+    
+    <div id="success-message" class="success-message">
+      <strong>✅ Connexion réussie !</strong><br>
+      Vous êtes maintenant connecté à votre compte.
+    </div>
+    
+    <div class="back-link">
+      <a href="/">← Retour à l'accueil</a>
+    </div>
+  </div>
+
+  <!-- Firebase SDKs -->
+  <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-auth-compat.js"></script>
+
+  <!-- FirebaseUI -->
+  <script src="https://www.gstatic.com/firebasejs/ui/6.0.1/firebase-ui-auth.js"></script>
+
+  <script>
+    // ✅ Configuration Firebase pour Groupe Tanou International
+    const firebaseConfig = {
+      apiKey: "AIzaSyBnJe6h1cf8G8CR2VOMptOjzNB940fpCxA",
+      authDomain: "groupe-tanou-international.firebaseapp.com",
+      projectId: "groupe-tanou-international",
+      storageBucket: "groupe-tanou-international.firebasestorage.app",
+      messagingSenderId: "620692175628",
+      appId: "1:620692175628:web:ed3a82892f848c6d68a729",
+      measurementId: "G-FL42EMQCEM"
+    };
+
+    // 🚀 Initialiser Firebase
+    firebase.initializeApp(firebaseConfig);
+
+    // 🎛️ Configurer FirebaseUI
+    const ui = new firebaseui.auth.AuthUI(firebase.auth());
+
+    const uiConfig = {
+      callbacks: {
+        signInSuccessWithAuthResult: function(authResult, redirectUrl) {
+          console.log("✅ Utilisateur connecté :", authResult.user.email);
+          
+          // Afficher le message de succès
+          document.getElementById('success-message').style.display = 'block';
+          document.getElementById('firebaseui-auth-container').style.display = 'none';
+          
+          // Optionnel : rediriger après 2 secondes
+          setTimeout(() => {
+            window.location.href = '/dashboard';
+          }, 2000);
+          
+          return false; // Pas de redirection automatique immédiate
+        },
+        signInFailure: function(error) {
+          console.error("❌ Erreur de connexion :", error);
+          return Promise.resolve();
+        },
+        uiShown: function() {
+          // Masquer le loader une fois l'interface chargée
+          document.getElementById('loader').style.display = 'none';
+        }
+      },
+      signInFlow: 'popup',
+      signInOptions: [
+        // Email/Password
+        {
+          provider: firebase.auth.EmailAuthProvider.PROVIDER_ID,
+          requireDisplayName: true,
+          signInMethod: firebase.auth.EmailAuthProvider.EMAIL_PASSWORD_SIGN_IN_METHOD
+        },
+        // Google
+        {
+          provider: firebase.auth.GoogleAuthProvider.PROVIDER_ID,
+          scopes: ['profile', 'email'],
+          customParameters: {
+            prompt: 'select_account'
+          }
+        },
+        // Téléphone
+        {
+          provider: firebase.auth.PhoneAuthProvider.PROVIDER_ID,
+          recaptchaParameters: {
+            type: 'image',
+            size: 'normal',
+            badge: 'bottomleft'
+          },
+          defaultCountry: 'BF', // Burkina Faso par défaut
+          defaultNationalNumber: '',
+          loginHint: '+226'
+        }
+      ],
+      // URLs personnalisables
+      tosUrl: '/terms-of-service',
+      privacyPolicyUrl: '/privacy-policy',
+      // Configuration supplémentaire
+      credentialHelper: firebaseui.auth.CredentialHelper.ACCOUNT_CHOOSER_COM,
+      autoUpgradeAnonymousUsers: true,
+      signInSuccessUrl: '/dashboard'
+    };
+
+    // 🧭 Lancer FirebaseUI
+    ui.start('#firebaseui-auth-container', uiConfig);
+
+    // 🔄 Gestion des états d'authentification
+    firebase.auth().onAuthStateChanged(function(user) {
+      if (user) {
+        console.log("👤 Utilisateur authentifié :", {
+          uid: user.uid,
+          email: user.email,
+          displayName: user.displayName,
+          phoneNumber: user.phoneNumber,
+          photoURL: user.photoURL
+        });
+      } else {
+        console.log("👤 Aucun utilisateur connecté");
+      }
+    });
+
+    // 🎨 Personnalisation dynamique après chargement
+    document.addEventListener('DOMContentLoaded', function() {
+      // Observer les changements dans le DOM pour personnaliser FirebaseUI
+      const observer = new MutationObserver(function(mutations) {
+        mutations.forEach(function(mutation) {
+          if (mutation.type === 'childList') {
+            // Personnaliser les boutons une fois qu'ils sont créés
+            const buttons = document.querySelectorAll('.firebaseui-idp-button');
+            buttons.forEach(button => {
+              button.style.borderRadius = '8px';
+              button.style.fontWeight = '500';
+            });
+          }
+        });
+      });
+
+      observer.observe(document.getElementById('firebaseui-auth-container'), {
+        childList: true,
+        subtree: true
+      });
+    });
+
+    // 🛡️ Gestion des erreurs globales
+    window.addEventListener('error', function(e) {
+      console.error('Erreur globale :', e.error);
+    });
+
+    // 📱 Responsive design
+    function adjustForMobile() {
+      if (window.innerWidth < 480) {
+        document.querySelector('.auth-container').style.padding = '20px';
+        document.querySelector('.auth-container').style.margin = '10px';
+      }
+    }
+
+    window.addEventListener('resize', adjustForMobile);
+    adjustForMobile();
+  </script>
+</body>
+</html>
