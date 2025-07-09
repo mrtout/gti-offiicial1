@@ -53,7 +53,15 @@ const services = [
     description: 'Import/Export professionnel',
   },
   {
-    href: '/services/logistics/dashboard',
+    title: 'Dashboard Logistique',
+    description: 'Gérez vos expéditions',
+  },
+  {
+    href: '/services/logistics/tracking',
+    icon: Truck,
+    title: 'Suivi de colis',
+    description: 'Suivez vos expéditions',
+  },
     icon: Calculator,
     title: 'Dashboard Logistique',
     description: 'Gérez vos expéditions',
