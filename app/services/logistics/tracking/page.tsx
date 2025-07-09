@@ -1,271 +1,283 @@
 "use client";
 
-import React, { useState, useEffect } from 'react';
-import Link from 'next/link';
-import Image from 'next/image';
+import React, { useState } from 'react';
+import { Header } from '@/components/layout/header';
 import { Button } from '@/components/ui/button';
-import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet';
+import { Input } from '@/components/ui/input';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
+import { Separator } from '@/components/ui/separator';
 import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
-} from '@/components/ui/dropdown-menu';
-import {
-  Menu,
-  ShoppingCart,
-  User,
-  Globe,
   Package,
-  Plane,
-  Calculator,
   Search,
-  Mail,
-  Bell,
-  LogIn,
-  UserPlus,
+  MapPin,
+  Clock,
+  Truck,
+  Plane,
+  Ship,
+  CheckCircle,
+  AlertCircle,
+  Info,
 } from 'lucide-react';
 
-const languages = [
-  { code: 'fr', name: 'Français', flag: '🇫🇷' },
-  { code: 'en', name: 'English', flag: '🇬🇧' },
-  { code: 'ar', name: 'العربية', flag: '🇸🇦' },
-];
-
-const services = [
+const trackingStatuses = [
   {
-    href: '/services/shopping',
-    icon: ShoppingCart,
-    title: 'Commandes Produits',
-    description: 'AliExpress, Shein, Amazon...',
+    id: 1,
+    status: 'En préparation',
+    description: 'Votre commande est en cours de préparation',
+    timestamp: '2024-01-15 09:00',
+    location: 'Entrepôt Casablanca',
+    icon: Package,
+    color: 'bg-blue-500',
   },
   {
-    href: '/services/flights',
+    id: 2,
+    status: 'Expédié',
+    description: 'Votre colis a été expédié',
+    timestamp: '2024-01-15 14:30',
+    location: 'Centre de tri Casablanca',
+    icon: Truck,
+    color: 'bg-yellow-500',
+  },
+  {
+    id: 3,
+    status: 'En transit',
+    description: 'Votre colis est en transit international',
+    timestamp: '2024-01-16 08:15',
+    location: 'Aéroport Mohammed V',
     icon: Plane,
-    title: 'Réservation Vols',
-    description: 'Billets d\'avion au meilleur prix',
+    color: 'bg-orange-500',
   },
   {
-    href: '/services/logistics',
-    icon: Calculator,
-    title: 'Cotation Logistique',
-    description: 'Import/Export professionnel',
-  },
-  {
-    href: '/services/logistics/dashboard',
-    icon: Calculator,
-    title: 'Dashboard Logistique',
-    description: 'Gérez vos expéditions',
-  },
-  {
-    href: '/services/sourcing',
-    icon: Search,
-    title: 'Sourcing Produits',
-    description: 'Trouvez vos fournisseurs',
-  },
-  {
-    href: '/services/postbox',
-    icon: Mail,
-    title: 'Boîte Postale',
-    description: 'Adresse virtuelle temporaire',
+    id: 4,
+    status: 'Arrivé à destination',
+    description: 'Votre colis est arrivé dans le pays de destination',
+    timestamp: '2024-01-17 12:00',
+    location: 'Centre de tri Paris',
+    icon: CheckCircle,
+    color: 'bg-green-500',
   },
 ];
 
-export function Header() {
-  const [isScrolled, setIsScrolled] = useState(false);
-  const [currentLang, setCurrentLang] = useState('fr');
+export default function TrackingPage() {
+  const [trackingNumber, setTrackingNumber] = useState('');
+  const [trackingResult, setTrackingResult] = useState(null);
+  const [isLoading, setIsLoading] = useState(false);
 
-  useEffect(() => {
-    const handleScroll = () => {
-      setIsScrolled(window.scrollY > 0);
-    };
-    window.addEventListener('scroll', handleScroll);
-    return () => window.removeEventListener('scroll', handleScroll);
-  }, []);
+  const handleTrackPackage = async () => {
+    if (!trackingNumber.trim()) return;
+    
+    setIsLoading(true);
+    // Simulate API call
+    setTimeout(() => {
+      setTrackingResult({
+        trackingNumber: trackingNumber,
+        status: 'En transit',
+        estimatedDelivery: '2024-01-18',
+        currentLocation: 'Centre de tri Paris',
+        history: trackingStatuses,
+      });
+      setIsLoading(false);
+    }, 1500);
+  };
 
   return (
-    <header
-      className={`sticky top-0 z-50 w-full transition-all duration-300 ${
-        isScrolled
-          ? 'bg-white/95 backdrop-blur-lg shadow-lg border-b'
-          : 'bg-transparent'
-      }`}
-    >
-      <div className="container mx-auto px-4">
-        <div className="flex h-16 items-center justify-between">
-          {/* Logo */}
-          <Link href="/">
-            <div className="flex items-center space-x-3">
-              <div className="relative w-10 h-10">
-                <Image
-                  src="/Groupe Tanou International Logo Blanc.jpg"
-                  alt="Groupe Tanou International"
-                  fill
-                  className="object-contain"
-                />
-              </div>
-              <div className="hidden sm:block">
-                <h1 className="text-xl font-bold text-gray-900">
-                  Groupe Tanou
-                </h1>
-                <p className="text-xs text-gray-600 -mt-1">International</p>
-              </div>
-            </div>
-          </Link>
+    <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100">
+      <Header />
+      
+      <main className="container mx-auto px-4 py-8">
+        {/* Hero Section */}
+        <div className="text-center mb-12">
+          <div className="inline-flex items-center justify-center w-16 h-16 bg-gradient-to-r from-yellow-400 to-yellow-600 rounded-full mb-6">
+            <Package className="h-8 w-8 text-white" />
+          </div>
+          <h1 className="text-4xl font-bold text-gray-900 mb-4">
+            Suivi de Colis
+          </h1>
+          <p className="text-xl text-gray-600 max-w-2xl mx-auto">
+            Suivez vos expéditions en temps réel avec notre système de tracking avancé
+          </p>
+        </div>
 
-          {/* Desktop Navigation */}
-          <nav className="hidden lg:flex items-center space-x-8">
-            <Link
-              href="/"
-              className="text-gray-700 hover:text-yellow-600 font-medium transition-colors"
-            >
-              Accueil
-            </Link>
-            
-            <DropdownMenu>
-              <DropdownMenuTrigger className="flex items-center space-x-1 text-gray-700 hover:text-yellow-600 font-medium transition-colors">
-                <span>Services</span>
-              </DropdownMenuTrigger>
-              <DropdownMenuContent className="w-80 p-4">
-                <div className="grid gap-3">
-                  {services.map((service) => (
-                    <Link key={service.href} href={service.href}>
-                      <div className="flex items-center space-x-3 p-3 rounded-lg hover:bg-gray-50 transition-colors">
-                        <service.icon className="h-5 w-5 text-yellow-600" />
-                        <div>
-                          <p className="font-medium text-gray-900">
-                            {service.title}
-                          </p>
-                          <p className="text-sm text-gray-600">
-                            {service.description}
-                          </p>
-                        </div>
-                      </div>
-                    </Link>
-                  ))}
+        {/* Tracking Search */}
+        <Card className="max-w-2xl mx-auto mb-12">
+          <CardHeader>
+            <CardTitle className="flex items-center gap-2">
+              <Search className="h-5 w-5" />
+              Rechercher un Colis
+            </CardTitle>
+            <CardDescription>
+              Entrez votre numéro de suivi pour connaître l'état de votre expédition
+            </CardDescription>
+          </CardHeader>
+          <CardContent>
+            <div className="flex gap-4">
+              <Input
+                placeholder="Numéro de suivi (ex: GTI123456789)"
+                value={trackingNumber}
+                onChange={(e) => setTrackingNumber(e.target.value)}
+                className="flex-1"
+              />
+              <Button 
+                onClick={handleTrackPackage}
+                disabled={isLoading || !trackingNumber.trim()}
+                className="gradient-gold text-white"
+              >
+                {isLoading ? (
+                  <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white" />
+                ) : (
+                  <>
+                    <Search className="h-4 w-4 mr-2" />
+                    Suivre
+                  </>
+                )}
+              </Button>
+            </div>
+          </CardContent>
+        </Card>
+
+        {/* Tracking Results */}
+        {trackingResult && (
+          <div className="max-w-4xl mx-auto">
+            {/* Package Info */}
+            <Card className="mb-8">
+              <CardHeader>
+                <div className="flex items-center justify-between">
+                  <div>
+                    <CardTitle className="flex items-center gap-2">
+                      <Package className="h-5 w-5" />
+                      Colis #{trackingResult.trackingNumber}
+                    </CardTitle>
+                    <CardDescription>
+                      Statut actuel: {trackingResult.status}
+                    </CardDescription>
+                  </div>
+                  <Badge variant="secondary" className="text-lg px-4 py-2">
+                    {trackingResult.status}
+                  </Badge>
                 </div>
-              </DropdownMenuContent>
-            </DropdownMenu>
+              </CardHeader>
+              <CardContent>
+                <div className="grid md:grid-cols-3 gap-6">
+                  <div className="flex items-center gap-3">
+                    <div className="p-2 bg-blue-100 rounded-lg">
+                      <MapPin className="h-5 w-5 text-blue-600" />
+                    </div>
+                    <div>
+                      <p className="font-medium text-gray-900">Position Actuelle</p>
+                      <p className="text-gray-600">{trackingResult.currentLocation}</p>
+                    </div>
+                  </div>
+                  <div className="flex items-center gap-3">
+                    <div className="p-2 bg-green-100 rounded-lg">
+                      <Clock className="h-5 w-5 text-green-600" />
+                    </div>
+                    <div>
+                      <p className="font-medium text-gray-900">Livraison Estimée</p>
+                      <p className="text-gray-600">{trackingResult.estimatedDelivery}</p>
+                    </div>
+                  </div>
+                  <div className="flex items-center gap-3">
+                    <div className="p-2 bg-yellow-100 rounded-lg">
+                      <Info className="h-5 w-5 text-yellow-600" />
+                    </div>
+                    <div>
+                      <p className="font-medium text-gray-900">Type d'Expédition</p>
+                      <p className="text-gray-600">Express International</p>
+                    </div>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
 
-            <Link
-              href="/about"
-              className="text-gray-700 hover:text-yellow-600 font-medium transition-colors"
-            >
-              À Propos
-            </Link>
-            <Link
-              href="/contact"
-              className="text-gray-700 hover:text-yellow-600 font-medium transition-colors"
-            >
-              Contact
-            </Link>
-          </nav>
-
-          {/* Actions */}
-          <div className="flex items-center space-x-4">
-            {/* Language Selector */}
-            <DropdownMenu>
-              <DropdownMenuTrigger asChild>
-                <Button variant="ghost" size="sm">
-                  <Globe className="h-4 w-4 mr-2" />
-                  <span className="hidden sm:inline">
-                    {languages.find((l) => l.code === currentLang)?.flag}
-                  </span>
-                </Button>
-              </DropdownMenuTrigger>
-              <DropdownMenuContent>
-                {languages.map((lang) => (
-                  <DropdownMenuItem
-                    key={lang.code}
-                    onClick={() => setCurrentLang(lang.code)}
-                  >
-                    <span className="mr-2">{lang.flag}</span>
-                    {lang.name}
-                  </DropdownMenuItem>
-                ))}
-              </DropdownMenuContent>
-            </DropdownMenu>
-
-            {/* Notifications */}
-            <Button variant="ghost" size="sm" className="relative">
-              <Bell className="h-4 w-4" />
-              <Badge className="absolute -top-1 -right-1 h-5 w-5 p-0 text-xs">
-                3
-              </Badge>
-            </Button>
-
-            {/* Cart */}
-            <Button variant="ghost" size="sm" className="relative">
-              <ShoppingCart className="h-4 w-4" />
-              <Badge className="absolute -top-1 -right-1 h-5 w-5 p-0 text-xs">
-                2
-              </Badge>
-            </Button>
-
-            {/* Auth Buttons */}
-            <div className="hidden sm:flex items-center space-x-2">
-              <Button variant="ghost" size="sm">
-                <LogIn className="h-4 w-4 mr-2" />
-                Connexion
-              </Button>
-              <Button size="sm" className="gradient-gold text-white">
-                <UserPlus className="h-4 w-4 mr-2" />
-                S'inscrire
-              </Button>
-            </div>
-
-            {/* Mobile Menu */}
-            <Sheet>
-              <SheetTrigger asChild className="lg:hidden">
-                <Button variant="ghost" size="sm">
-                  <Menu className="h-5 w-5" />
-                </Button>
-              </SheetTrigger>
-              <SheetContent side="right" className="w-80">
-                <div className="flex flex-col space-y-6 mt-6">
-                  <Link
-                    href="/"
-                    className="text-lg font-medium text-gray-900 hover:text-yellow-600 transition-colors"
-                  >
-                    Accueil
-                  </Link>
-                  
-                  <div className="space-y-4">
-                    <h3 className="text-lg font-medium text-gray-900">Services</h3>
-                    {services.map((service) => (
-                      <Link key={service.href} href={service.href}>
-                        <div className="flex items-center space-x-3 p-3 rounded-lg hover:bg-gray-50 transition-colors">
-                          <service.icon className="h-5 w-5 text-yellow-600" />
-                          <div>
-                            <p className="font-medium text-gray-900">
-                              {service.title}
+            {/* Tracking Timeline */}
+            <Card>
+              <CardHeader>
+                <CardTitle>Historique de Suivi</CardTitle>
+                <CardDescription>
+                  Suivez le parcours détaillé de votre colis
+                </CardDescription>
+              </CardHeader>
+              <CardContent>
+                <div className="space-y-6">
+                  {trackingResult.history.map((event, index) => {
+                    const Icon = event.icon;
+                    const isLast = index === trackingResult.history.length - 1;
+                    
+                    return (
+                      <div key={event.id} className="relative">
+                        {!isLast && (
+                          <div className="absolute left-6 top-12 w-0.5 h-16 bg-gray-200" />
+                        )}
+                        <div className="flex items-start gap-4">
+                          <div className={`p-3 rounded-full ${event.color}`}>
+                            <Icon className="h-5 w-5 text-white" />
+                          </div>
+                          <div className="flex-1 min-w-0">
+                            <div className="flex items-center justify-between mb-1">
+                              <h3 className="font-semibold text-gray-900">
+                                {event.status}
+                              </h3>
+                              <time className="text-sm text-gray-500">
+                                {event.timestamp}
+                              </time>
+                            </div>
+                            <p className="text-gray-600 mb-1">
+                              {event.description}
                             </p>
-                            <p className="text-sm text-gray-600">
-                              {service.description}
-                            </p>
+                            <div className="flex items-center gap-1 text-sm text-gray-500">
+                              <MapPin className="h-3 w-3" />
+                              {event.location}
+                            </div>
                           </div>
                         </div>
-                      </Link>
-                    ))}
-                  </div>
-
-                  <div className="pt-6 space-y-3">
-                    <Button className="w-full gradient-gold text-white">
-                      <LogIn className="h-4 w-4 mr-2" />
-                      Connexion
-                    </Button>
-                    <Button variant="outline" className="w-full">
-                      <UserPlus className="h-4 w-4 mr-2" />
-                      S'inscrire
-                    </Button>
-                  </div>
+                      </div>
+                    );
+                  })}
                 </div>
-              </SheetContent>
-            </Sheet>
+              </CardContent>
+            </Card>
           </div>
+        )}
+
+        {/* Help Section */}
+        <div className="max-w-4xl mx-auto mt-12">
+          <Card>
+            <CardHeader>
+              <CardTitle className="flex items-center gap-2">
+                <AlertCircle className="h-5 w-5" />
+                Besoin d'Aide ?
+              </CardTitle>
+            </CardHeader>
+            <CardContent>
+              <div className="grid md:grid-cols-2 gap-6">
+                <div>
+                  <h3 className="font-semibold text-gray-900 mb-2">
+                    Problème avec votre suivi ?
+                  </h3>
+                  <p className="text-gray-600 mb-4">
+                    Si vous rencontrez des difficultés pour suivre votre colis ou si les informations semblent incorrectes, notre équipe est là pour vous aider.
+                  </p>
+                  <Button variant="outline">
+                    Contacter le Support
+                  </Button>
+                </div>
+                <div>
+                  <h3 className="font-semibold text-gray-900 mb-2">
+                    Questions Fréquentes
+                  </h3>
+                  <ul className="space-y-2 text-gray-600">
+                    <li>• Combien de temps prend une livraison internationale ?</li>
+                    <li>• Comment modifier l'adresse de livraison ?</li>
+                    <li>• Que faire si mon colis est en retard ?</li>
+                    <li>• Comment obtenir un accusé de réception ?</li>
+                  </ul>
+                </div>
+              </div>
+            </CardContent>
+          </Card>
         </div>
-      </div>
-    </header>
+      </main>
+    </div>
   );
 }
