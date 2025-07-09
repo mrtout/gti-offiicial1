@@ -26,110 +26,82 @@ import {
   RefreshCw,
 } from 'lucide-react';
 
-interface TrackingEvent {
-  date: string;
-  time: string;
-  location: string;
+// Define interfaces for proper typing
+interface TrackingHistoryItem {
+  id: number;
   status: string;
   description: string;
-  icon: React.ElementType;
+  timestamp: string;
+  location: string;
+  icon: React.ComponentType;
+  color: string;
 }
 
-interface TrackingInfo {
+interface TrackingResult {
   trackingNumber: string;
-  status: 'in-transit' | 'delivered' | 'customs' | 'delayed';
-  origin: string;
-  destination: string;
-  mode: 'sea' | 'air' | 'road';
-  provider: string;
+  status: string;
   estimatedDelivery: string;
-  actualDelivery?: string;
-  progress: number;
   currentLocation: string;
-  weight: number;
-  dimensions: string;
-  value: number;
-  events: TrackingEvent[];
-  documents: string[];
-  contact: {
-    name: string;
-    phone: string;
-    email: string;
-  };
+  history: TrackingHistoryItem[];
 }
 
-const mockTrackingData: TrackingInfo = {
+const mockTrackingData: TrackingResult = {
   trackingNumber: 'GTI-SEA-001234',
-  status: 'in-transit',
-  origin: 'Guangzhou, Chine',
-  destination: 'Ouagadougou, Burkina Faso',
-  mode: 'sea',
-  provider: 'Maersk Line',
+  status: 'En transit',
   estimatedDelivery: '2025-02-05',
-  progress: 65,
   currentLocation: 'Port de Tema, Ghana',
-  weight: 2500,
-  dimensions: '120x80x100 cm',
-  value: 1250000,
-  events: [
+  history: [
     {
-      date: '2025-01-25',
-      time: '14:30',
-      location: 'Port de Tema, Ghana',
+      id: 1,
       status: 'En transit',
       description: 'Cargaison arrivée au port de Tema, en attente de transbordement',
+      timestamp: '2025-01-25 14:30',
+      location: 'Port de Tema, Ghana',
       icon: Ship,
+      color: 'text-blue-600',
     },
     {
-      date: '2025-01-20',
-      time: '09:15',
-      location: 'Océan Atlantique',
+      id: 2,
       status: 'En mer',
       description: 'Navire en route vers l\'Afrique de l\'Ouest',
+      timestamp: '2025-01-20 09:15',
+      location: 'Océan Atlantique',
       icon: Ship,
+      color: 'text-blue-600',
     },
     {
-      date: '2025-01-15',
-      time: '16:45',
-      location: 'Port de Shenzhen, Chine',
+      id: 3,
       status: 'Embarqué',
       description: 'Cargaison chargée à bord du navire MSC Seaside',
+      timestamp: '2025-01-15 16:45',
+      location: 'Port de Shenzhen, Chine',
       icon: Ship,
+      color: 'text-blue-600',
     },
     {
-      date: '2025-01-12',
-      time: '11:20',
-      location: 'Entrepôt Guangzhou',
+      id: 4,
       status: 'Préparation',
       description: 'Cargaison préparée et emballée pour l\'expédition',
+      timestamp: '2025-01-12 11:20',
+      location: 'Entrepôt Guangzhou',
       icon: Package,
+      color: 'text-gray-600',
     },
     {
-      date: '2025-01-10',
-      time: '08:00',
-      location: 'Guangzhou, Chine',
+      id: 5,
       status: 'Collecté',
       description: 'Cargaison collectée chez l\'expéditeur',
+      timestamp: '2025-01-10 08:00',
+      location: 'Guangzhou, Chine',
       icon: Truck,
+      color: 'text-green-600',
     },
   ],
-  documents: [
-    'Bill of Lading',
-    'Commercial Invoice',
-    'Packing List',
-    'Certificate of Origin',
-    'Insurance Certificate',
-  ],
-  contact: {
-    name: 'Service Client Maersk',
-    phone: '+45 33 63 33 63',
-    email: 'customer.service@maersk.com',
-  },
 };
 
 export default function TrackingPage() {
   const [trackingNumber, setTrackingNumber] = useState('');
-  const [trackingData, setTrackingData] = useState<TrackingInfo | null>(null);
+  const [trackingResult, setTrackingResult] = useState<TrackingResult | null>(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
 
@@ -145,10 +117,10 @@ export default function TrackingPage() {
     // Simulation d'appel API
     setTimeout(() => {
       if (trackingNumber === 'GTI-SEA-001234') {
-        setTrackingData(mockTrackingData);
+        setTrackingResult(mockTrackingData);
       } else {
         setError('Numéro de suivi non trouvé');
-        setTrackingData(null);
+        setTrackingResult(null);
       }
       setLoading(false);
     }, 1500);
@@ -156,13 +128,13 @@ export default function TrackingPage() {
 
   const getStatusIcon = (status: string) => {
     switch (status) {
-      case 'in-transit':
+      case 'En transit':
         return <RefreshCw className="h-5 w-5 text-blue-600" />;
-      case 'delivered':
+      case 'Livré':
         return <CheckCircle className="h-5 w-5 text-green-600" />;
-      case 'customs':
+      case 'En douane':
         return <AlertCircle className="h-5 w-5 text-orange-600" />;
-      case 'delayed':
+      case 'Retardé':
         return <AlertCircle className="h-5 w-5 text-red-600" />;
       default:
         return <Package className="h-5 w-5 text-gray-600" />;
@@ -171,29 +143,16 @@ export default function TrackingPage() {
 
   const getStatusColor = (status: string) => {
     switch (status) {
-      case 'in-transit':
+      case 'En transit':
         return 'bg-blue-100 text-blue-800';
-      case 'delivered':
+      case 'Livré':
         return 'bg-green-100 text-green-800';
-      case 'customs':
+      case 'En douane':
         return 'bg-orange-100 text-orange-800';
-      case 'delayed':
+      case 'Retardé':
         return 'bg-red-100 text-red-800';
       default:
         return 'bg-gray-100 text-gray-800';
-    }
-  };
-
-  const getModeIcon = (mode: string) => {
-    switch (mode) {
-      case 'sea':
-        return <Ship className="h-6 w-6 text-blue-600" />;
-      case 'air':
-        return <Plane className="h-6 w-6 text-orange-600" />;
-      case 'road':
-        return <Truck className="h-6 w-6 text-green-600" />;
-      default:
-        return <Package className="h-6 w-6 text-gray-600" />;
     }
   };
 
@@ -256,7 +215,7 @@ export default function TrackingPage() {
         </Card>
 
         {/* Tracking Results */}
-        {trackingData && (
+        {trackingResult && (
           <div className="space-y-6">
             {/* Status Overview */}
             <Card>
@@ -265,35 +224,30 @@ export default function TrackingPage() {
                   {/* Main Status */}
                   <div className="lg:col-span-2">
                     <div className="flex items-center space-x-4 mb-4">
-                      {getModeIcon(trackingData.mode)}
+                      <Ship className="h-6 w-6 text-blue-600" />
                       <div>
                         <h2 className="text-2xl font-bold text-gray-900">
-                          {trackingData.trackingNumber}
+                          {trackingResult.trackingNumber}
                         </h2>
-                        <p className="text-gray-600">{trackingData.provider}</p>
+                        <p className="text-gray-600">Maersk Line</p>
                       </div>
                     </div>
                     
-                    <Badge className={`${getStatusColor(trackingData.status)} mb-4`}>
-                      {getStatusIcon(trackingData.status)}
-                      <span className="ml-2">
-                        {trackingData.status === 'in-transit' ? 'En transit' :
-                         trackingData.status === 'delivered' ? 'Livré' :
-                         trackingData.status === 'customs' ? 'En douane' :
-                         trackingData.status === 'delayed' ? 'Retardé' : 'Statut inconnu'}
-                      </span>
+                    <Badge className={`${getStatusColor(trackingResult.status)} mb-4`}>
+                      {getStatusIcon(trackingResult.status)}
+                      <span className="ml-2">{trackingResult.status}</span>
                     </Badge>
 
                     <div className="space-y-2">
                       <div className="flex items-center text-sm">
                         <MapPin className="h-4 w-4 text-gray-400 mr-2" />
                         <span className="text-gray-600">Position actuelle:</span>
-                        <span className="font-medium ml-1">{trackingData.currentLocation}</span>
+                        <span className="font-medium ml-1">{trackingResult.currentLocation}</span>
                       </div>
                       <div className="flex items-center text-sm">
                         <Calendar className="h-4 w-4 text-gray-400 mr-2" />
                         <span className="text-gray-600">Livraison estimée:</span>
-                        <span className="font-medium ml-1">{trackingData.estimatedDelivery}</span>
+                        <span className="font-medium ml-1">{trackingResult.estimatedDelivery}</span>
                       </div>
                     </div>
                   </div>
@@ -304,29 +258,27 @@ export default function TrackingPage() {
                     <div className="space-y-4">
                       <div>
                         <div className="flex justify-between text-sm mb-2">
-                          <span>{trackingData.origin}</span>
-                          <span>{trackingData.destination}</span>
+                          <span>Guangzhou, Chine</span>
+                          <span>Ouagadougou, Burkina Faso</span>
                         </div>
-                        <Progress value={trackingData.progress} className="h-3" />
+                        <Progress value={65} className="h-3" />
                         <div className="text-center text-sm text-gray-600 mt-2">
-                          {trackingData.progress}% complété
+                          65% complété
                         </div>
                       </div>
 
                       <div className="grid grid-cols-3 gap-4 text-sm">
                         <div>
                           <span className="text-gray-500">Poids:</span>
-                          <span className="font-medium ml-1">{trackingData.weight} kg</span>
+                          <span className="font-medium ml-1">2500 kg</span>
                         </div>
                         <div>
                           <span className="text-gray-500">Dimensions:</span>
-                          <span className="font-medium ml-1">{trackingData.dimensions}</span>
+                          <span className="font-medium ml-1">120x80x100 cm</span>
                         </div>
                         <div>
                           <span className="text-gray-500">Valeur:</span>
-                          <span className="font-medium ml-1">
-                            {trackingData.value.toLocaleString()} XOF
-                          </span>
+                          <span className="font-medium ml-1">1,250,000 XOF</span>
                         </div>
                       </div>
                     </div>
@@ -347,8 +299,8 @@ export default function TrackingPage() {
                   </CardHeader>
                   <CardContent>
                     <div className="space-y-6">
-                      {trackingData.events.map((event, index) => (
-                        <div key={index} className="flex space-x-4">
+                      {trackingResult.history.map((event, index) => (
+                        <div key={event.id} className="flex space-x-4">
                           <div className="flex flex-col items-center">
                             <div className={`w-10 h-10 rounded-full flex items-center justify-center ${
                               index === 0 ? 'bg-blue-100' : 'bg-gray-100'
@@ -357,7 +309,7 @@ export default function TrackingPage() {
                                 index === 0 ? 'text-blue-600' : 'text-gray-400'
                               }`} />
                             </div>
-                            {index < trackingData.events.length - 1 && (
+                            {index < trackingResult.history.length - 1 && (
                               <div className="w-px h-12 bg-gray-200 mt-2"></div>
                             )}
                           </div>
@@ -366,7 +318,7 @@ export default function TrackingPage() {
                             <div className="flex items-center justify-between mb-1">
                               <h4 className="font-semibold text-gray-900">{event.status}</h4>
                               <div className="text-sm text-gray-500">
-                                {event.date} à {event.time}
+                                {event.timestamp}
                               </div>
                             </div>
                             <p className="text-gray-600 text-sm mb-1">{event.description}</p>
@@ -394,7 +346,7 @@ export default function TrackingPage() {
                   </CardHeader>
                   <CardContent>
                     <div className="space-y-2">
-                      {trackingData.documents.map((doc, index) => (
+                      {['Bill of Lading', 'Commercial Invoice', 'Packing List', 'Certificate of Origin', 'Insurance Certificate'].map((doc, index) => (
                         <div key={index} className="flex items-center justify-between p-2 hover:bg-gray-50 rounded">
                           <span className="text-sm">{doc}</span>
                           <Button variant="ghost" size="sm">
@@ -413,15 +365,15 @@ export default function TrackingPage() {
                   </CardHeader>
                   <CardContent className="space-y-3">
                     <div>
-                      <p className="font-medium">{trackingData.contact.name}</p>
+                      <p className="font-medium">Service Client Maersk</p>
                     </div>
                     <div className="flex items-center space-x-2">
                       <Phone className="h-4 w-4 text-gray-400" />
-                      <span className="text-sm">{trackingData.contact.phone}</span>
+                      <span className="text-sm">+45 33 63 33 63</span>
                     </div>
                     <div className="flex items-center space-x-2">
                       <Mail className="h-4 w-4 text-gray-400" />
-                      <span className="text-sm">{trackingData.contact.email}</span>
+                      <span className="text-sm">customer.service@maersk.com</span>
                     </div>
                     <Button variant="outline" className="w-full">
                       Contacter le transporteur
@@ -452,7 +404,7 @@ export default function TrackingPage() {
         )}
 
         {/* Demo Section */}
-        {!trackingData && !loading && (
+        {!trackingResult && !loading && (
           <Card className="max-w-4xl mx-auto">
             <CardHeader>
               <CardTitle className="text-center">Essayez notre démo</CardTitle>
