@@ -55,9 +55,6 @@ const services = [
   {
     href: '/services/logistics/dashboard',
     icon: Calculator,
-  {
-    href: '/services/logistics/dashboard',
-    icon: Calculator,
     title: 'Dashboard Logistique',
     description: 'Gérez vos expéditions',
   },
@@ -267,10 +264,6 @@ export function Header() {
               </SheetContent>
             </Sheet>
           </div>
-              <Plus className="w-4 h-4 mr-2" />
-              Nouvelle Cotation
-            </Button>
-          </Link>
         </div>
       </div>
     </header>
