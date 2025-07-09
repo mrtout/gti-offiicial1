@@ -55,10 +55,6 @@ const services = [
   {
     href: '/services/logistics/dashboard',
     icon: Calculator,
-  const [trackingResult, setTrackingResult] = useState<TrackingResult | null>(null);
-  {
-    href: '/services/logistics/dashboard',
-    icon: Calculator,
     title: 'Dashboard Logistique',
     description: 'Gérez vos expéditions',
   },
