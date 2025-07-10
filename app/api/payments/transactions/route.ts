@@ -74,20 +74,29 @@ export async function POST(request: NextRequest) {
     let paymentDetails: any = {};
     
     if (paymentMethod === 'BTC' || paymentMethod === 'USDT_TRC20') {
+      // Type assertion to safely access address property for crypto payments
+      const cryptoConfig = config as { address: string; feesPercent: number };
+      
       paymentDetails = {
-        address: config.address,
+        address: cryptoConfig.address,
         qrCodeUrl: `/api/payments/qr/${transactionId}`,
         network: paymentMethod === 'USDT_TRC20' ? 'TRC20' : 'Bitcoin'
       };
     } else if (paymentMethod.includes('MONEY')) {
+      // Type assertion for mobile money payments
+      const mobileConfig = config as { numbers: string[]; holderName: string; feesPercent: number };
+      
       paymentDetails = {
-        numbers: config.numbers,
-        holderName: config.holderName,
+        numbers: mobileConfig.numbers,
+        holderName: mobileConfig.holderName,
         instructions: `Envoyez ${totalAmount.toLocaleString()} XOF au numéro ci-dessus`
       };
     } else if (paymentMethod === 'BANK_TRANSFER') {
+      // Type assertion for bank transfer payments
+      const bankConfig = config as { bankDetails: any; feesPercent: number };
+      
       paymentDetails = {
-        ...config.bankDetails,
+        ...bankConfig.bankDetails,
         amount: totalAmount,
         reference: transactionId,
         instructions: `Effectuez un virement de ${totalAmount.toLocaleString()} XOF avec la référence ${transactionId}`
