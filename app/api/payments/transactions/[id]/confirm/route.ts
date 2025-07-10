@@ -206,7 +206,7 @@ async function sendProofSubmissionNotification(transaction: any) {
 }
 
 function getConfirmationMessage(status: string): string {
-  const messages = {
+  const messages: { [key: string]: string } = {
     'PROCESSING': 'Votre preuve de paiement a été reçue et est en cours de vérification. Vous recevrez une confirmation sous 24h.',
     'COMPLETED': 'Votre paiement a été automatiquement vérifié et confirmé. Merci !',
     'FAILED': 'La vérification de votre paiement a échoué. Veuillez contacter le support.'
