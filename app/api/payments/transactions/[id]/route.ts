@@ -104,7 +104,7 @@ export async function PUT(
 }
 
 function getStatusMessage(status: string): string {
-  const messages = {
+  const messages: { [key: string]: string } = {
     'PENDING': 'En attente de paiement',
     'AWAITING_PROOF': 'En attente de preuve de paiement',
     'PROCESSING': 'Paiement en cours de vérification',
