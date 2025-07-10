@@ -122,7 +122,7 @@ export default function TestPaymentPage() {
                 <strong>4.</strong> Soumettez une preuve de paiement (fictive pour les tests)
               </p>
               <p className="text-sm">
-                <strong>5.</strong> Vérifiez le statut dans l'interface admin: <a href="/admin/payments" className="underline font-medium">Admin Paiements</a>
+                <strong>5.</strong> Vérifiez le statut dans l'interface admin: <a href="/admin/payments" className=\"underline font-medium">Admin Paiements</a>
               </p>
             </CardContent>
           </Card>
