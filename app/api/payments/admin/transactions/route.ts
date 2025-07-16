@@ -1,6 +1,3 @@
-// Tell Next.js this route must be dynamic
-export const dynamic = 'force-dynamic';
-
 import { NextRequest, NextResponse } from 'next/server';
 
 // Référence à la base de données en mémoire
